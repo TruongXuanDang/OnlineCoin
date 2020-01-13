@@ -19,6 +19,11 @@ namespace OnlineCoin.Models
         {
         }
 
+        public static OnlineCoinContext Create()
+        {
+            return new OnlineCoinContext();
+        }
+
         public System.Data.Entity.DbSet<OnlineCoin.Models.Account> Accounts { get; set; }
 
         public System.Data.Entity.DbSet<OnlineCoin.Models.AccountRole> AccountRoles { get; set; }

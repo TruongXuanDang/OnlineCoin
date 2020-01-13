@@ -10,10 +10,6 @@ namespace OnlineCoin.Models
         public string FirstName { get; set; }
         [Required]
         public string LastName { get; set; }
-        [Required]
-        public string Avatar { get; set; }
-        [Required]
-        public DateTime Birthday { get; set; }
         public DateTime CreatedAt { get; set; }
         public AccountStatus Status { get; set; }
         public enum AccountStatus

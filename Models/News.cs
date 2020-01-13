@@ -19,6 +19,5 @@ namespace OnlineCoin.Models
             Saved = 2,
             Deleted = 3
         }
-        public virtual Author Author { get; set; }
     }
 }

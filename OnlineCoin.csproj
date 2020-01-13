@@ -126,7 +126,6 @@
     </Compile>
     <Compile Include="Models\Account.cs" />
     <Compile Include="Models\AccountRole.cs" />
-    <Compile Include="Models\Author.cs" />
     <Compile Include="Models\Coin.cs" />
     <Compile Include="Models\News.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

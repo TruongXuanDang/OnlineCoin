@@ -1,0 +1,74 @@
+﻿@model OnlineCoin.Models.Coin
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Coin</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Symbol)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Symbol)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastPrice)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastPrice)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DailyChange)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DailyChange)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.High)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.High)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Low)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Low)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Volume)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Volume)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Exchange)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Exchange)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

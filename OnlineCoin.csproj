@@ -136,6 +136,7 @@
     <Compile Include="Controllers\CoinsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\NewsController.cs" />
+    <Compile Include="Controllers\PaypalController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -208,6 +209,7 @@
     <Content Include="Views\Coins\Details.cshtml" />
     <Content Include="Views\Coins\Edit.cshtml" />
     <Content Include="Views\Coins\Index.cshtml" />
+    <Content Include="Views\Paypal\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

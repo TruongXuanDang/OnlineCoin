@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Coin Online</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" type="text/css" href="css/all.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<body>
+	<header id="coin-h">
+		<a class="coin-lg" href="index.html">
+			<h2 class="tit-h">Coin Online</h2>
+		</a>
+		<a href="Login.html" class="login-h">
+			<span class="login-t">Đăng nhập</span>
+		</a>
+	</header>
+	<div id="coin-c">
+		<input id='val' type='hidden' value='' />
+		<div class="cc-s">
+			<a id='currentMarket' href="#">Chọn sàn tiền ảo</a>
+			<div id='dropdown' class="cc-drop">
+
+			</div>
+		</div>
+	</div>
+	<div id="coin-b">
+		<div class="coin-news">
+			<div class="cnews-tit">
+				<a href="#" class="cnews-l">@News(only v-user)</a>
+			</div>
+		</div>
+		<div class="coin-t">
+			<table id='table' class="coin-p-table">
+				<thead>
+					<tr class="tr-t">
+						<th>Tên</th>
+						<th>Giá gần nhất</th>
+						<th>Biến động giá</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+	<div id="coin-f">
+		<div class="cf-t">© 2017 - 2020 CoinOnline.com. All rights reserved</div>
+	</div>
+</body>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
+
+
+<script type='module'>
+	// Your web app's Firebase configuration
+	const collection = 'coinV1'
+	const config = [
+		{
+			name: 'btcusdt',
+			label: 'Bitcoin'
+		},
+		{
+			name: 'ethusdt',
+			label: 'Etherum'
+		},
+		{
+			name: 'ltcusdt',
+			label: 'Litecoin'
+		},
+		{
+			name: 'eosusdt',
+			label: 'EOS Coin'
+		},
+		{
+			name: 'neousdt',
+			label: 'NEO'
+		},
+		{
+			name: 'qtumusdt',
+			label: 'QTUM'
+		},
+	]
+	const getLabel = (name) => {
+		let found = config.find(e => e.name == name.toLowerCase())
+		if (!found) {
+			let splitted = name.split('USDT')
+
+			return splitted[0]
+		}
+		return found.label
+	}
+	var firebaseConfig = {
+		apiKey: "AIzaSyAmnyMG7YxL3r7aavLUbcp1pjWrYKjOhfc",
+		authDomain: "coin-f23f8.firebaseapp.com",
+		databaseURL: "https://coin-f23f8.firebaseio.com",
+		projectId: "coin-f23f8",
+		storageBucket: "coin-f23f8.appspot.com",
+		messagingSenderId: "386954701418",
+		appId: "1:386954701418:web:08b5b789b2e6e0aa6ef813",
+		measurementId: "G-TW5JF5DNGD"
+	};
+	// Initialize Firebase
+	firebase.initializeApp(firebaseConfig);
+
+	var db = firebase.firestore();
+
+
+	$('#val').change((a) => {
+		let currentMarket = $('#val').val()
+		let bodies = $('tbody')
+		bodies.each((index, ele) => {
+			if ($(ele).attr('id') == currentMarket)
+				$(ele).show()
+			else
+				$(ele).hide()
+		})
+	})
+
+	db.collection(collection).get().then((querySnapshot) => {
+
+		querySnapshot.forEach((doc) => {
+			let data = doc.data()
+			let marketTable = document.createElement('tbody')
+			$(marketTable).attr({ id: data.name })
+			$('#table').append(marketTable)
+
+			let coins = Object.keys(data.ticker)
+			let sortedCoins = coins.sort((a, b) => {
+				return -(data.ticker[a].latest - data.ticker[b].latest)
+			})
+			sortedCoins.forEach(coin => {
+				let coinRow = document.createElement('tr')
+				$(coinRow).attr({ class: 'tr-b', id: `${coin}-${data.name}` })
+				$(coinRow).html(`
+					<td>${getLabel(coin)}</td>
+					<td class='latest'>${data.ticker[coin].latest}</td>
+					<td class='diff'>---</td>
+				`)
+				marketTable.append(coinRow)
+			})
+			$(marketTable).hide()
+
+			var newDiv = document.createElement('a')
+			$(newDiv).attr('href', '#')
+			newDiv.innerHTML = data.name
+			$(newDiv).click(() => {
+				$('#currentMarket').html(data.name)
+				$('#val').val(data.name)
+				$('#val').trigger("change");
+			})
+			console.log(newDiv)
+			$('#dropdown').append(newDiv)
+
+			if (!$('#val').val()) {
+				$(newDiv).trigger('click')
+			}
+
+			let marketRef = db.collection(collection).doc(doc.id)
+			marketRef.onSnapshot(function (doc) {
+				let data = doc.data()
+				sortedCoins.forEach(coin => {
+					let row = $('#' + `${coin}-${data.name}`)
+					if (!row)
+						return
+
+					let latest = row.find('.latest')
+					let diffValue = row.find('.diff')
+
+					let currentValue = parseFloat(latest.html())
+					let newValue = parseFloat(data.ticker[coin].latest)
+					let diff = (currentValue - newValue).toFixed(4)
+					latest.html(newValue)
+					diffValue.html(diff)
+
+
+					if (diff < 0) {
+						row.css('background-color', 'rgba(255, 0, 0, 0.3)')
+						setTimeout(() => {
+							row.css('background-color', 'white')
+						}, 2000)
+						diffValue.html(`${diff}`)
+					} else if (diff > 0) {
+						row.css('background-color', 'rgba(0, 255, 0, 0.3)')
+						setTimeout(() => {
+							row.css('background-color', 'white')
+						}, 2000)
+						diffValue.html(`+${diff}`)
+					} else {
+						diffValue.html(`---`)
+					}
+
+				})
+
+			})
+		})
+	})
+
+
+</script>
+
+
+</html>

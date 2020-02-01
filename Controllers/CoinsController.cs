@@ -17,7 +17,7 @@ namespace OnlineCoin.Controllers
         // GET: Coins
         public ActionResult Index()
         {
-            return View(db.Coins.ToList());
+            return View("~/Views/CoinsIndex/Index.cshtml",db.Coins.ToList());
         }
 
         // GET: Coins/Details/5

@@ -1,123 +1,96 @@
-﻿using System.Data.Entity;
+﻿using System;
+using OnlineCoin.App_Start;
+using OnlineCoin.Models;
+using Microsoft.AspNet.Identity;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
-using OnlineCoin.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace OnlineCoin.Controllers
 {
     public class AccountsController : Controller
     {
-        private OnlineCoinContext db = new OnlineCoinContext();
+        private OnlineCoinContext dbContext;
+        private MyUserManager userManager;
 
-        // GET: Accounts
-        public ActionResult Index()
+        public MyUserManager UserManager
         {
-            return View(db.Accounts.ToList());
+            get
+            {
+                return userManager ?? HttpContext.GetOwinContext().GetUserManager<MyUserManager>();
+            }
+            set
+            {
+                userManager = value;
+            }
+        }
+        public OnlineCoinContext DbContext
+        {
+            get
+            {
+                return dbContext ?? HttpContext.GetOwinContext().Get<OnlineCoinContext>();
+            }
+            set
+            {
+                dbContext = value;
+            }
         }
 
-        // GET: Accounts/Details/5
-        public ActionResult Details(int? id)
+        public AccountsController()
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Account account = db.Accounts.Find(id);
-            if (account == null)
-            {
-                return HttpNotFound();
-            }
-            return View(account);
+
         }
 
-        // GET: Accounts/Create
-        public ActionResult Create()
+        public ActionResult Login()
         {
             return View();
         }
 
-        // POST: Accounts/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,FirstName,LastName,CreatedAt,Status")] Account account)
+        public ActionResult Login(string username, string password)
         {
-            if (ModelState.IsValid)
-            {
-                db.Accounts.Add(account);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(account);
-        }
-
-        // GET: Accounts/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Account account = db.Accounts.Find(id);
+            Account account = UserManager.Find(username, password);
             if (account == null)
             {
                 return HttpNotFound();
             }
-            return View(account);
+            var ident = UserManager.CreateIdentity(account, DefaultAuthenticationTypes.ApplicationCookie);
+            var authManager = HttpContext.GetOwinContext().Authentication;
+            authManager.SignIn(new Microsoft.Owin.Security.AuthenticationProperties { IsPersistent = false }, ident);
+
+            return Redirect("/Home");
         }
 
-        // POST: Accounts/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,FirstName,LastName,CreatedAt,Status")] Account account)
+        public ActionResult Logout()
         {
-            if (ModelState.IsValid)
-            {
-                db.Entry(account).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(account);
+            HttpContext.GetOwinContext().Authentication.SignOut();
+            return Redirect("/Home");
         }
-
-        // GET: Accounts/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Register()
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Account account = db.Accounts.Find(id);
-            if (account == null)
-            {
-                return HttpNotFound();
-            }
-            return View(account);
+            return View();
         }
-
-        // POST: Accounts/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        [HttpPost]
+        public async Task<ActionResult> Register(string username, string password, string firstname, string lastname)
         {
-            Account account = db.Accounts.Find(id);
-            db.Accounts.Remove(account);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
+            var account = new Account()
             {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
+                UserName = username,
+                FirstName = firstname,
+                Email = username,
+                LastName = lastname,
+                CreatedAt = DateTime.Now,
+                Status = Account.AccountStatus.DeActive
+
+            };
+            IdentityResult result = await userManager.CreateAsync(account,password);
+            return View("Register");
         }
     }
 }

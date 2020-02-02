@@ -1,11 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace OnlineCoin.Models
 {
-    public class Account
+    public class Account : IdentityUser
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         [Required]
         public string FirstName { get; set; }
         [Required]

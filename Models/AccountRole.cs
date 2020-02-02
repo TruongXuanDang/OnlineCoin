@@ -1,8 +1,9 @@
 ﻿using System;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace OnlineCoin.Models
 {
-    public class AccountRole
+    public class AccountRole : IdentityRole
     {
         public int Id { get; set; }
         public string Description { get; set; }

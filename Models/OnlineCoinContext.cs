@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Web;
 
 namespace OnlineCoin.Models
 {
-    public class OnlineCoinContext : DbContext
+    public class OnlineCoinContext : IdentityDbContext<Account>
     {
         // You can add custom code to this file. Changes will not be overwritten.
         // 
@@ -23,10 +24,6 @@ namespace OnlineCoin.Models
         {
             return new OnlineCoinContext();
         }
-
-        public System.Data.Entity.DbSet<OnlineCoin.Models.Account> Accounts { get; set; }
-
-        public System.Data.Entity.DbSet<OnlineCoin.Models.AccountRole> AccountRoles { get; set; }
 
         public System.Data.Entity.DbSet<OnlineCoin.Models.News> News { get; set; }
 

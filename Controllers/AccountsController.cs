@@ -89,7 +89,7 @@ namespace OnlineCoin.Controllers
                 Status = Account.AccountStatus.DeActive
 
             };
-            IdentityResult result = await userManager.CreateAsync(account,password);
+            IdentityResult result = await UserManager.CreateAsync(account,password);
             return View("Register");
         }
     }

@@ -124,12 +124,14 @@
     </Reference>
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    <Reference Include="Antlr3.Runtime">
       <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountRolesController.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
@@ -151,6 +153,7 @@
     <Compile Include="Models\News.cs" />
     <Compile Include="Models\OnlineCoinContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -175,6 +178,10 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Views\CoinsIndex\css\all.css" />
+    <Content Include="Views\CoinsIndex\css\bootstrap.min.css" />
+    <Content Include="Views\CoinsIndex\index.html" />
+    <Content Include="Views\CoinsIndex\js\Test.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -210,6 +217,7 @@
     <Content Include="Views\Coins\Edit.cshtml" />
     <Content Include="Views\Coins\Index.cshtml" />
     <Content Include="Views\Paypal\Index.cshtml" />
+    <Content Include="Views\CoinsIndex\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

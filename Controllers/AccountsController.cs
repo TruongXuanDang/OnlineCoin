@@ -86,7 +86,7 @@ namespace OnlineCoin.Controllers
                 Email = username,
                 LastName = lastname,
                 CreatedAt = DateTime.Now,
-                Status = Account.AccountStatus.DeActive
+                Status = Account.AccountStatus.Active
 
             };
             IdentityResult result = await UserManager.CreateAsync(account,password);
